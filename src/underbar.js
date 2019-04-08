@@ -81,12 +81,12 @@
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
     var res = [];
-     _.each(collection,function(element, index){
-        if ( test(element) ){
-          res.push(element);
-        };
-    })
-     return res;
+    _.each(collection,function(element, index){
+      if ( test(element) ){
+        res.push(element);
+      }
+    });
+    return res;
   };
 
   // Return all elements of an array that don't pass a truth test.
@@ -95,10 +95,10 @@
     // copying code in and modifying it
     var res = [];
     _.each(collection,function(element, index){
-        if ( !test(element) ){
-          res.push(element);
-        };
-    })
+      if ( !test(element) ){
+        res.push(element);
+      }
+    });
     return res;
   };
 
@@ -120,19 +120,19 @@
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
     var res = [];
-    if(Array.isArray(collection)){
-      for (var i = 0; i < collection.length; i++) {
-        res.push(iterator(collection[i]));
-      }
-    } else {
-      var res = {};
-      for ( var key in collection){
-          res = iterator(collection[key]);
-      }
-    }
-    // _.each(collection,function(value,index)){
-    //   res.push(iterator(value));  
+    // if(Array.isArray(collection)){
+    //   for (var i = 0; i < collection.length; i++) {
+    //     res.push(iterator(collection[i]));
+    //   }
+    // } else {
+    //   var res = {};
+    //   for ( var key in collection){
+    //     res = iterator(collection[key]);
+    //   }
     // }
+    _.each(collection,function(value,index,collection){
+      res.push(iterator(value,index,collection));  
+    });
     return res;
   };
 
@@ -175,6 +175,14 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    if(accumulator === undefined){
+      accumulator = collection[0];
+      collection = collection.slice(1);
+    }
+    _.each(collection,function(element,index) {
+        accumulator = iterator(accumulator, element,index);
+    });
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
